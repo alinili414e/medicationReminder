@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CloudFormation Template for Medication Reminder System
+
+Transform:
+  - AWS::Include
+
+Resources:
+  CheckMedicationScheduleFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: src/handlers/checkMedicationSchedule.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Runtime: nodejs14.x
+      Code:
+        S3Bucket: codepackagedonotdelete
+        S3Key: medication-reminder-lambda.zip
+
+  SendNotificationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: src/handlers/sendNotification.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Runtime: nodejs14.x
+      Code:
+        S3Bucket: codepackagedonotdelete
+        S3Key: medication-reminder-lambda.zip
+
+  CheckResponseFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: src/handlers/checkResponse.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Runtime: nodejs14.x
+      Code:
+        S3Bucket: codepackagedonotdelete
+        S3Key: medication-reminder-lambda.zip
+
+  NotifyEmergencyContactFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: src/handlers/notifyEmergencyContact.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Runtime: nodejs14.x
+      Code:
+        S3Bucket: codepackagedonotdelete
+        S3Key: medication-reminder-lambda.zip
+
+  MedicationReminderStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString: 
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: 's3://codepackagedonotdelete/stateMachineDefinition.json'
+      RoleArn: arn:aws:iam::123456789012:role/step-functions-execution-role

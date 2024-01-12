@@ -1,0 +1,53 @@
+
+{
+  "Comment": "Medication Reminder Workflow",
+  "StartAt": "CheckMedicationSchedule",
+  "States": {
+    "CheckMedicationSchedule": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:your-region:your-account-id:function:checkMedicationSchedule",
+      "Next": "SendNotification"
+    },
+    "SendNotification": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:your-region:your-account-id:function:sendNotification",
+      "Next": "Wait30Minutes"
+    },
+    "Wait30Minutes": {
+      "Type": "Wait",
+      "Seconds": 1800,
+      "Next": "CheckResponse"
+    },
+    "CheckResponse": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:your-region:your-account-id:function:checkResponse",
+      "Next": "Decision"
+    },
+    "Decision": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.nonResponders.length",
+          "NumericEquals": 0,
+          "Next": "AllResponded"
+        },
+        {
+          "Variable": "$.nonResponders.length",
+          "NumericGreaterThan": 0,
+          "Next": "NotifyEmergencyContact"
+        }
+      ],
+      "Default": "AllResponded"
+    },
+    "NotifyEmergencyContact": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:your-region:your-account-id:function:notifyEmergencyContact",
+      "End": true
+    },
+    "AllResponded": {
+      "Type": "Pass",
+      "Result": "All patients responded. No action needed.",
+      "End": true
+    }
+  }
+}

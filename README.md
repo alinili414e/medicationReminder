@@ -2,7 +2,7 @@
 
 ## Description
 
-The AWS Lambda Medication Reminder is a serverless application designed to send medication reminders to patients. It leverages AWS Lambda functions, DynamoDB, and SNS to notify patients about their medication schedules.
+The AWS Lambda Medication Reminder is a serverless application designed to send medication reminders to patients who may not be up to date using smartphones and apps. It leverages AWS Lambda functions, DynamoDB, and SNS to notify patients about their medication schedules.If there is no confirmation response from the patients regarding taking their medication their emergency contacts will be notified via text.
 
 ## Features
 
